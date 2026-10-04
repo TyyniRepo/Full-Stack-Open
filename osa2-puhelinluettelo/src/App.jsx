@@ -1,17 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Phonebook from './components/Phonebook'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { id: 1, name: 'Arto Hellas', phone: '040-123456' },
-    { id: 2, name: 'Ada Lovelace', phone: '39-44-5323523' },
-    { id: 3, name: 'Dan Abramov', phone: '12-43-234345' },
-    { id: 4, name: 'Mary Poppendieck', phone: '39-23-6423122' }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
-  const [newPhone, setNewPhone] = useState('')
+  const [newNumber, setNewNumber] = useState('')
   const [message, setMessage] = useState('')
   const [searchString, setSearchString] = useState('')
+
+  const hook = () => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }
+
+  useEffect(hook, [])
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -24,16 +30,19 @@ const App = () => {
       return
     }
     const id = Math.max(...persons.map(person => person.id)) + 1
-    const person = { id: id, name: newName, phone: newPhone }
+    const person = { name: newName, number: newNumber, id: id }
     setPersons(persons.concat(person))
     setNewName('')
-    setNewPhone('')
+    setNewNumber('')
   }
   const handleNameChange = (event) => {
+    if (message.length) {
+      setMessage('')
+    }
     setNewName(event.target.value)
   }
-  const handlePhoneChange = (event) => {
-    setNewPhone(event.target.value)
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
   }
   const handleFilterChange = (event) => {
     setSearchString(event.target.value.toLowerCase())
@@ -42,11 +51,11 @@ const App = () => {
     persons: persons.filter((person) => person.name.toLowerCase().includes(searchString)),
     formConfig: {
       nameValue: newName,
-      phoneValue: newPhone,
+      numberValue: newNumber,
       message: message,
       handleSubmit: handleSubmit,
       handleNameChange: handleNameChange,
-      handlePhoneChange: handlePhoneChange,
+      handleNumberChange: handleNumberChange,
     },
     filterConfig: {
       handleFilterChange: handleFilterChange,
