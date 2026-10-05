@@ -9,7 +9,7 @@ const Phonebook = (props) => {
         <h3>Add new</h3>
         <PersonForm {...props.formConfig} />
         <h2>Numbers</h2>
-        <Persons persons={props.persons} />
+        <Persons {...props.personConfig} />
     </>)
 }
 

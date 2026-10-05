@@ -1,7 +1,6 @@
 const PersonForm = ({
     nameValue,
     numberValue,
-    message,
     handleSubmit,
     handleNameChange,
     handleNumberChange,
@@ -17,7 +16,6 @@ const PersonForm = ({
             <div>
                 <button type="submit">add</button>
             </div>
-            <div>{message}</div>
         </form>
     )
 }
